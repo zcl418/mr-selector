@@ -11,3 +11,8 @@ window.addEventListener('DOMContentLoaded', () => {
     replaceText(`${type}-version`, process.versions[type])
   }
 })
+
+window.nodeRequire = require;
+delete window.require;
+delete window.exports;
+delete window.module;

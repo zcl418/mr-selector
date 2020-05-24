@@ -1,5 +1,5 @@
-const { dialog } = require('electron').remote
-const fs = require('fs')
+const { dialog } = nodeRequire('electron').remote
+const fs = nodeRequire('fs')
 window.onload = function () {
     const btn_select = document.querySelector("#btn-select-file");
     const btn_read = document.querySelector("#btn-read-file");
@@ -16,7 +16,7 @@ window.onload = function () {
         }).then((result) => {
             if (!result.canceled) {
                 filePath = result.filePaths[0];
-                file_path.innerHTML = filePath;
+                file_path.value = filePath;
             }
         }).catch(err => {
             console.log(err)
