@@ -14,5 +14,8 @@
   "license": "ISC",
   "devDependencies": {
     "electron": "^8.3.0"
+  },
+  "dependencies": {
+    "bryce-geometry": "^1.0.1"
   }
 }
