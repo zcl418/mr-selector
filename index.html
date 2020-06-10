@@ -1,29 +1,25 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <script></script>
+    <script src="js/jquery-3.5.1.min.js"></script>
+    <title></title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="css/bootstrap.min.css">
-  <script>
-    
-  </script>
-  <script src="js/jquery-3.5.1.min.js"></script>
-  <title></title>
-</head>
-
-<body class="container">
-  <h1>文件读取</h1>
-
-  <div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="选择一个文件" id="file-path">
-    <div class="input-group-append">
-      <button class="btn btn-outline-secondary" type="button" id="btn-select-file">选取...</button>
+  <body>
+    <img src="banner.png" width="100%" />
+    <div class="container mt-3">
+      <div class="input-group mb-3">
+        <input type="text" class="form-control" placeholder="选择一个文件" id="file-path" />
+        <div class="input-group-append">
+          <button class="btn-sm btn-outline-secondary" type="button" id="btn-select-file">选取...</button>
+        </div>
+      </div>
+      <button id="btn-read-file">读取文件</button>
     </div>
-  </div>
-  
-
-  <button id="btn-read-file">读取文件</button>
-  <script src="./js/index.js"></script>
-</body>
-
+    <span id="container"></span>
+    <script src="./js/index.js"></script>
+  </body>
 </html>
