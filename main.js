@@ -1,13 +1,14 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
+const { app, BrowserWindow } = require('electron')
+const path = require('path')
+
 
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 600,
-    height: 650,
-    // resizable: false,
+    height: 670,
+    resizable: false,
     autoHideMenuBar: true,
     icon: 'Dragonfly_32px.ico',
     title: 'MR数据筛选工具',
@@ -21,7 +22,7 @@ function createWindow() {
   mainWindow.loadFile('index.html');
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   // Menu.setApplicationMenu(null);
 }
@@ -50,8 +51,8 @@ app.on('activate', function () {
 
 // =========================
 const { ipcMain } = require('electron');
-const process = require('./process');
+const process = require('./process')
 // 读取数据时处理
 ipcMain.on('process', (event, arg) => {
-  // process.process(event,arg);
-});
+  process.process(event,arg, path.join(__dirname,'result.csv'));
+})

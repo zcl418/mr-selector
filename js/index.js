@@ -9,10 +9,13 @@ window.onload = function () {
   const lngSelect = document.querySelector('#lngSelect');
   const latSelect = document.querySelector('#latSelect');
   const textareaRange = document.querySelector('#textareaRange');
+  const progressBar = document.querySelector('#progressBar');
+  const progressbarContainer = document.querySelector('#progressbarContainer');
   let filePath = '';
 
   // 获取文件路径
   btn_select.onclick = () => {
+    container.innerHTML = "";
     dialog
       .showOpenDialog({
         filters: [{ name: 'data', extensions: ['csv'] }],
@@ -33,6 +36,7 @@ window.onload = function () {
 
   // 单击运行按钮
   btn_read.onclick = () => {
+    container.innerHTML = '';
     let strPolygon = textareaRange.value;
     if (filePath != '' || strPolygon != '') {
       let lngSelectIndex = lngSelect.selectedIndex;
@@ -44,13 +48,34 @@ window.onload = function () {
         });
         return;
       }
-      str2Array(strPolygon);
+      let polygon;
+      try {
+        polygon = str2Array(strPolygon)
+      } catch(err){
+        dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
+          type: 'error',
+          message: err,
+        });
+        return;
+      }
       let stats = fs.statSync(filePath);
       // 和主进程通信
       const { ipcRenderer } = nodeRequire('electron');
-      ipcRenderer.send('process', [stats.size, filePath, lngSelectIndex, latSelectIndex]);
+      ipcRenderer.send('process', [stats.size, filePath, lngSelectIndex, latSelectIndex,polygon]);
+      progressbarContainer.setAttribute('style','visibility:visible;')
       ipcRenderer.on('progress', (event, arg) => {
-        container.innerHTML = arg;
+        if(arg == 'ok'){
+          progressBar.setAttribute('style','width: 100%')
+          progressbarContainer.setAttribute('style','visibility:hidden;')
+          progressBar.setAttribute('style','width: 0%')
+          // container.innerHTML = '已完成筛选，请查看目录下的result.csv文件';
+          dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
+            type: 'info',
+            message: '已完成筛选，请查看目录下的result.csv文件'
+          });
+        }else{
+          progressBar.setAttribute('style','width: ' + arg*100 + '%')
+        }
       });
     }
   };
@@ -60,7 +85,6 @@ window.onload = function () {
 function read_first_line(path, lngSelect, latSelect) {
   let rs = fs.createReadStream(path);
   rs.once('open', () => {
-    console.log('open file....');
   });
 
   rs.on('data', (data) => {
@@ -90,7 +114,6 @@ function read_first_line(path, lngSelect, latSelect) {
   });
 
   rs.once('close', () => {
-    console.log('close.....');
   });
 }
 
@@ -102,15 +125,27 @@ function str2Array(str) {
   // {[119.053741,33.594937];[119.05548,33.59505];[119.060804,33.595393];[119.060805,33.595393];[119.060953,33.595376];[119.053741,33.594937]};{...}
   str = str.replace('{[', '').replace(']}', '');
   let strArray = str.split('];[');
-
+  let count = strArray.length;
   // 如果最后一个和第一个不一样，则在最后补一个
   if (strArray[0] != strArray[count - 1]) {
     strArray.push(strArray[0]);
+    count++
   }
-  let count = strArray.length;
-  // console.log(strArray);
+
+  let x = 0.0, y = 0.0
   let rs = new Array(count);
   for (let i = 0; i < count; i++) {
     temp = strArray[i].split(',');
+    // temp = ["119.05548","33.59505"]
+    x = Number(temp[0]);
+    if (Number.isNaN(x)) {
+      throw temp[0] + '转换错误';
+    }
+    y = Number(temp[1]);
+    if (Number.isNaN(y)) {
+      throw temp[1] + '转换错误';
+    }
+    rs[i] = [x, y]
   }
+  return rs
 }

@@ -1,26 +1,36 @@
 const readline = require('readline')
+const {isPointInPolygon} = require('bryce-geometry')
 const fs = require('fs')
-exports.process = function (event,arg) {
+exports.process = function (event,arg,outputFile) {
+    /**
+     * arg = stats.size, filePath, lngSelectIndex, latSelectIndex,polygon
+     */
     let reader = readline.createInterface({
         input: fs.createReadStream(arg[1], { encoding: 'utf8' })
     })
-
+    let ws = fs.createWriteStream(outputFile);
     let i = 0
     let size = 0
     // 一行一行地读取文件
     reader.on('line', function (line) {
         i++;
-        size += Buffer.byteLength(line)
-        if (i % 100000 == 0) {
-            console.log(line.split(','))
-
-            console.log(i, " - ", size, "/", arg[0])
-            event.reply('progress', size / arg[0])
+        if(i==1){
+            ws.write(line + '\r\n');
+        }else{
+            aline = line.split(',')
+            if(isPointInPolygon(aline[arg[2]],aline[arg[3]],arg[4])){
+                ws.write(line+'\r\n')
+            }
+            size += Buffer.byteLength(line)
+            if (i % 100000 == 0) {
+                event.reply('progress', size / arg[0])
+            }
         }
+        
     });
     // 读取完成后,将arr作为参数传给回调函数
     reader.on('close', function () {
-        // container.innerHTML = "完成！"
-        console.log(i, "完成！")
+        event.reply('progress', 'ok')
+        ws.end();
     });
 }
