@@ -19,20 +19,21 @@
       </div>
       <div>
         <div class="form-group row">
-          <label for="colFormLabel" class="col-sm-2 col-form-label">经度</label>
+          <label for="colFormLabel" class="col-sm-2 col-form-label">经度列</label>
           <div class="col-sm-10">
-            <select id="lngSelect" class="form-control" disabled>
-            </select>
+            <select id="lngSelect" class="form-control" disabled> </select>
           </div>
         </div>
         <div class="form-group row">
-          <label for="colFormLabel" class="col-sm-2 col-form-label">纬度</label>
+          <label for="colFormLabel" class="col-sm-2 col-form-label">纬度列</label>
           <div class="col-sm-10">
-            <select id="latSelect" class="form-control" disabled>
-            </select>
+            <select id="latSelect" class="form-control" disabled> </select>
           </div>
         </div>
-        
+      </div>
+      <div class="form-group">
+        <label for="exampleFormControlTextarea1">目标区域的经纬度</label>
+        <textarea class="form-control" id="textareaRange" rows="10" placeholder="形如：{[119.053741,33.594937];[119.05548,33.59505];[119.060804,33.595393];[119.060805,33.595393];[119.060953,33.595376];[119.053741,33.594937]}"></textarea>
       </div>
       <button id="btn-read-file">读取文件</button>
     </div>
