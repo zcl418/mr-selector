@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "chcp 65001 && electron ."
+    "start": "chcp 65001 && electron .",
+    "package": "electron-packager . --platform=win32 --arch=x64 --out=./dist --asar --app-version=0.1.0 --download.mirrorOptions.mirror=https://npm.taobao.org/mirrors/electron/ --download.mirrorOptions.customDir=8.3.1 --icon=Dragonfly_32px.ico"
   },
   "repository": {
     "type": "git",
@@ -13,7 +14,7 @@
   "author": "bryce",
   "license": "ISC",
   "devDependencies": {
-    "electron": "^8.3.0"
+    "electron": "^8.3.1"
   },
   "dependencies": {
     "bryce-geometry": "^1.0.1"

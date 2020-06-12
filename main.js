@@ -1,7 +1,6 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
-
+const { app, BrowserWindow } = require('electron');
+const path = require('path');
 
 function createWindow() {
   // Create the browser window.
@@ -51,8 +50,9 @@ app.on('activate', function () {
 
 // =========================
 const { ipcMain } = require('electron');
-const process = require('./process')
+const process = require('./process');
 // 读取数据时处理
 ipcMain.on('process', (event, arg) => {
-  process.process(event,arg, path.join(__dirname,'result.csv'));
-})
+  let outFile = path.join(path.dirname(arg[1]), 'result.csv');
+  process.process(event, arg, outFile);
+});

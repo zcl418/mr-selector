@@ -15,7 +15,7 @@ window.onload = function () {
 
   // 获取文件路径
   btn_select.onclick = () => {
-    container.innerHTML = "";
+    container.innerHTML = '';
     dialog
       .showOpenDialog({
         filters: [{ name: 'data', extensions: ['csv'] }],
@@ -50,8 +50,8 @@ window.onload = function () {
       }
       let polygon;
       try {
-        polygon = str2Array(strPolygon)
-      } catch(err){
+        polygon = str2Array(strPolygon);
+      } catch (err) {
         dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
           type: 'error',
           message: err,
@@ -61,20 +61,20 @@ window.onload = function () {
       let stats = fs.statSync(filePath);
       // 和主进程通信
       const { ipcRenderer } = nodeRequire('electron');
-      ipcRenderer.send('process', [stats.size, filePath, lngSelectIndex, latSelectIndex,polygon]);
-      progressbarContainer.setAttribute('style','visibility:visible;')
+      ipcRenderer.send('process', [stats.size, filePath, lngSelectIndex, latSelectIndex, polygon]);
+      progressbarContainer.setAttribute('style', 'visibility:visible;');
       ipcRenderer.on('progress', (event, arg) => {
-        if(arg == 'ok'){
-          progressBar.setAttribute('style','width: 100%')
-          progressbarContainer.setAttribute('style','visibility:hidden;')
-          progressBar.setAttribute('style','width: 0%')
+        if (arg == 'ok') {
+          progressBar.setAttribute('style', 'width: 100%');
+          progressbarContainer.setAttribute('style', 'visibility:hidden;');
+          progressBar.setAttribute('style', 'width: 0%');
           // container.innerHTML = '已完成筛选，请查看目录下的result.csv文件';
           dialog.showMessageBox(BrowserWindow.getFocusedWindow(), {
             type: 'info',
-            message: '已完成筛选，请查看目录下的result.csv文件'
+            message: '已完成筛选，请查看原MR文件目录下的result.csv文件',
           });
-        }else{
-          progressBar.setAttribute('style','width: ' + arg*100 + '%')
+        } else {
+          progressBar.setAttribute('style', 'width: ' + arg * 100 + '%');
         }
       });
     }
@@ -84,8 +84,7 @@ window.onload = function () {
 // 读取第一行
 function read_first_line(path, lngSelect, latSelect) {
   let rs = fs.createReadStream(path);
-  rs.once('open', () => {
-  });
+  rs.once('open', () => {});
 
   rs.on('data', (data) => {
     if (data.indexOf('\r\n')) {
@@ -113,8 +112,7 @@ function read_first_line(path, lngSelect, latSelect) {
     }
   });
 
-  rs.once('close', () => {
-  });
+  rs.once('close', () => {});
 }
 
 function remove_quotes(str) {
@@ -129,10 +127,11 @@ function str2Array(str) {
   // 如果最后一个和第一个不一样，则在最后补一个
   if (strArray[0] != strArray[count - 1]) {
     strArray.push(strArray[0]);
-    count++
+    count++;
   }
 
-  let x = 0.0, y = 0.0
+  let x = 0.0,
+    y = 0.0;
   let rs = new Array(count);
   for (let i = 0; i < count; i++) {
     temp = strArray[i].split(',');
@@ -145,7 +144,7 @@ function str2Array(str) {
     if (Number.isNaN(y)) {
       throw temp[1] + '转换错误';
     }
-    rs[i] = [x, y]
+    rs[i] = [x, y];
   }
-  return rs
+  return rs;
 }
